@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Attendance</title>
+    <link rel="stylesheet" href="dbms.css">
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        <img src="https://i.pinimg.com/1200x/af/85/fd/af85fd005cb098111b85832faf17f00f.jpg" alt="School Logo">
+    </div>
+
+    <h1>School Management System</h1>
+
+    <nav>
+        <ul>
+
+            <li class="dropdown">
+                Student
+                <ul class="dropdown-content">
+                    <li><a href="add_student.html">Add Student</a></li>
+                    <li><a href="edit_student.html">Edit Student</a></li>
+                    <li><a href="delete_student.html">Delete Student</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                Marks
+                <ul class="dropdown-content">
+                    <li><a href="enter_marks.html">Enter Marks</a></li>
+                    <li><a href="edit_marks.html">Edit Marks</a></li>
+                    <li><a href="delete_marks.html">Delete Marks</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                Attendance
+                <ul class="dropdown-content">
+                    <li><a href="add_attendance.html">Add Attendance</a></li>
+                    <li><a href="edit_attendance.html">Edit Attendance</a></li>
+                    <li><a href="delete_attendance.html">Delete Attendance</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="reports_html.html">Reports</a>
+            </li>
+
+            <li onclick="logout()">Exit</li>
+
+        </ul>
+    </nav>
+
+</header>
+
+<div class="container">
+
+    <h2>EDIT ATTENDANCE</h2>
+
+    <label>Registration Number</label>
+    <input type="text" id="regno">
+
+    <label>Date</label>
+    <input type="date" id="date">
+
+    <button type="button" onclick="getAttendance()">Get Attendance</button>
+
+    <form id="editForm">
+
+        <label>Student Name</label>
+        <input type="text" id="name" required>
+
+        <label>Status</label>
+        <select id="status" required>
+            <option value="">Select</option>
+            <option>Present</option>
+            <option>Absent</option>
+        </select>
+
+        <button type="submit">Update Attendance</button>
+
+    </form>
+
+</div>
+
+<script>
+
+function getAttendance(){
+
+    let regno = document.getElementById("regno").value;
+    let date = document.getElementById("date").value;
+
+    let attendance = JSON.parse(localStorage.getItem("attendance")) || [];
+
+    let record = attendance.find(a =>
+        a.regno === regno &&
+        a.date === date
+    );
+
+    if(!record){
+
+        alert("Attendance record not found!");
+        return;
+
+    }
+
+    document.getElementById("name").value = record.name;
+    document.getElementById("status").value = record.status;
+
+}
+
+document.getElementById("editForm").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    let regno = document.getElementById("regno").value;
+    let date = document.getElementById("date").value;
+
+    let attendance = JSON.parse(localStorage.getItem("attendance")) || [];
+
+    let index = attendance.findIndex(a =>
+        a.regno === regno &&
+        a.date === date
+    );
+
+    if(index === -1){
+
+        alert("Attendance record not found!");
+        return;
+
+    }
+
+    attendance[index].name = document.getElementById("name").value;
+    attendance[index].status = document.getElementById("status").value;
+
+    localStorage.setItem("attendance", JSON.stringify(attendance));
+
+    alert("Attendance Updated Successfully!");
+
+    document.getElementById("editForm").reset();
+    document.getElementById("regno").value = "";
+    document.getElementById("date").value = "";
+
+});
+
+function logout(){
+
+    if(confirm("Do you want to exit?")){
+
+        window.location.href = "dbms.home.html";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
