@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Management System</title>
+    <link rel="stylesheet" href="dbms.css">
+</head>
+
+<body>
+
+    <header>
+
+        <div class="logo">
+            <img src="https://i.pinimg.com/1200x/af/85/fd/af85fd005cb098111b85832faf17f00f.jpg" alt="School Logo">
+        </div>
+
+        <h1>School Management System</h1>
+
+        <nav>
+            <ul>
+
+                <li class="dropdown">
+                    Student
+                    <ul class="dropdown-content">
+                        <li><a href="add_student.html">Add Student</a></li>
+                        <li><a href="edit_student.html">Edit Student</a></li>
+                        <li><a href="delete_student.html">Delete Student</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    Marks
+                    <ul class="dropdown-content">
+                        <li><a href="enter_marks.html">Enter Marks</a></li>
+                        <li><a href="edit_marks.html">Edit Marks</a></li>
+                        <li><a href="delete_marks.html">Delete Marks</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    Attendance
+                    <ul class="dropdown-content">
+                        <li><a href="add_attendance.html">Add Attendance</a></li>
+                        <li><a href="edit_attendance.html">Edit Attendance</a></li>
+                        <li><a href="delete_attendance.html">Delete Attendance</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="reports_html.html">Reports</a>
+                </li>
+
+                <li onclick="logout()">Exit</li>
+
+            </ul>
+        </nav>
+
+    </header>
+
+    <div class="main">
+
+        <div class="home">
+            <img src="https://www.svgrepo.com/show/436138/education-bag-learning-24.svg" alt="School Illustration">
+        </div>
+
+        <div class="Login">
+
+            <div class="form-container">
+
+                <h2>ADMINISTRATOR LOGIN</h2>
+
+                <p>Enter username and password</p>
+
+                <form id="loginForm">
+
+                    <div class="username">
+                        <label for="username">Username :</label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            autocomplete="off"
+                            required>
+                    </div>
+
+                    <div class="password">
+                        <label for="password">Password :</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required>
+                    </div>
+
+                    <div class="submit">
+                        <button type="submit">Login</button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        document.getElementById("loginForm").addEventListener("submit", function(e){
+
+            e.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if(username === "admin" && password === "admin123"){
+
+                alert("Login Successful");
+
+                // Redirect after login
+                window.location.href = "dbms_home.html";
+
+            }
+            else{
+
+                alert("Invalid Username or Password");
+
+            }
+
+        });
+
+        function logout(){
+
+            if(confirm("Do you want to exit?")){
+                window.location.href = "dbms.home.html";
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>

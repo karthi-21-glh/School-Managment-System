@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Marks</title>
+    <link rel="stylesheet" href="dbms.css">
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        <img src="https://i.pinimg.com/1200x/af/85/fd/af85fd005cb098111b85832faf17f00f.jpg" alt="School Logo">
+    </div>
+
+    <h1>School Management System</h1>
+
+    <nav>
+        <ul>
+
+            <li class="dropdown">
+                Student
+                <ul class="dropdown-content">
+                    <li><a href="add_student.html">Add Student</a></li>
+                    <li><a href="edit_student.html">Edit Student</a></li>
+                    <li><a href="delete_student.html">Delete Student</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                Marks
+                <ul class="dropdown-content">
+                    <li><a href="enter_marks.html">Enter Marks</a></li>
+                    <li><a href="edit_marks.html">Edit Marks</a></li>
+                    <li><a href="delete_marks.html">Delete Marks</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                Attendance
+                <ul class="dropdown-content">
+                    <li><a href="add_attendance.html">Add Attendance</a></li>
+                    <li><a href="edit_attendance.html">Edit Attendance</a></li>
+                    <li><a href="delete_attendance.html">Delete Attendance</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="reports_html.html">Reports</a>
+            </li>
+
+            <li onclick="logout()">Exit</li>
+
+        </ul>
+    </nav>
+
+</header>
+
+<div class="container">
+
+    <h2>ENTER MARKS</h2>
+
+    <form id="marksForm">
+
+        <label>Registration Number</label>
+        <input type="text" id="regno" required>
+
+        <label>Exam</label>
+        <select id="exam">
+            <option>Class Test 1</option>
+            <option>Class Test 2</option>
+            <option>Mid Term</option>
+            <option>Half Yearly</option>
+            <option>Final Exam</option>
+        </select>
+
+        <label>First Language</label>
+        <input type="number" id="firstlanguage" min="0" max="100" required>
+
+        <label>Second Language</label>
+        <input type="number" id="secondlanguage" min="0" max="100" required>
+
+        <label>Mathematics</label>
+        <input type="number" id="maths" min="0" max="100" required>
+
+        <label>Science</label>
+        <input type="number" id="science" min="0" max="100" required>
+
+        <label>Arts</label>
+        <input type="number" id="arts" min="0" max="100" required>
+
+        <label>Other (If Any)</label>
+        <input type="number" id="other" min="0" max="100" value="0">
+
+        <button type="submit">Save Marks</button>
+
+    </form>
+
+</div>
+
+<script>
+
+document.getElementById("marksForm").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    let mark = {
+
+        regno: document.getElementById("regno").value,
+        exam: document.getElementById("exam").value,
+
+        firstlanguage: document.getElementById("firstlanguage").value,
+        secondlanguage: document.getElementById("secondlanguage").value,
+        maths: document.getElementById("maths").value,
+        science: document.getElementById("science").value,
+        arts: document.getElementById("arts").value,
+        other: document.getElementById("other").value
+
+    };
+
+    let marks = JSON.parse(localStorage.getItem("marks")) || [];
+
+    let exists = marks.find(m =>
+        m.regno === mark.regno &&
+        m.exam === mark.exam
+    );
+
+    if(exists){
+        alert("Marks for this exam already exist!");
+        return;
+    }
+
+    marks.push(mark);
+
+    localStorage.setItem("marks", JSON.stringify(marks));
+
+    alert("Marks Saved Successfully!");
+
+    this.reset();
+
+});
+
+function logout(){
+
+    if(confirm("Do you want to exit?")){
+        window.location.href = "dbms.home.html";
+    }
+
+}
+
+</script>
+
+</body>
+</html>
