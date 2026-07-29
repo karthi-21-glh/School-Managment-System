@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Report</title>
     <link rel="stylesheet" href="dbms.css">
+    <script>
+        if (sessionStorage.getItem("isLoggedIn") !== "true") {
+            alert("Access Restricted! Please log in first.");
+            window.location.href = "index.html";
+        }
+    </script>
 </head>
 
 <body>
@@ -19,6 +25,8 @@
 
     <nav>
         <ul>
+
+            <li><a href="dbms_home.html">Home</a></li>
 
             <li class="dropdown">
                 Student
@@ -47,7 +55,7 @@
                 </ul>
             </li>
 
-            <li>
+            <li class="active">
                 <a href="reports_html.html">Reports</a>
             </li>
 
@@ -58,7 +66,7 @@
 
 </header>
 
-<div class="container">
+<div class="report-container">
 
     <h2>STUDENT REPORT</h2>
 
@@ -155,20 +163,27 @@ function generateReport(){
     document.getElementById("class").innerHTML = student.className;
     document.getElementById("gender").innerHTML = student.gender;
 
-    document.getElementById("fl").innerHTML = mark.firstlanguage;
-    document.getElementById("sl").innerHTML = mark.secondlanguage;
-    document.getElementById("maths").innerHTML = mark.maths;
-    document.getElementById("science").innerHTML = mark.science;
-    document.getElementById("arts").innerHTML = mark.arts;
-    document.getElementById("other").innerHTML = mark.other;
+    let fl = mark.firstlanguage || mark.firstLanguage || 0;
+    let sl = mark.secondlanguage || mark.secondLanguage || 0;
+    let ma = mark.maths || 0;
+    let sc = mark.science || 0;
+    let ar = mark.arts || 0;
+    let ot = mark.other || 0;
+
+    document.getElementById("fl").innerHTML = fl;
+    document.getElementById("sl").innerHTML = sl;
+    document.getElementById("maths").innerHTML = ma;
+    document.getElementById("science").innerHTML = sc;
+    document.getElementById("arts").innerHTML = ar;
+    document.getElementById("other").innerHTML = ot;
 
     let total =
-        Number(mark.firstlanguage) +
-        Number(mark.secondlanguage) +
-        Number(mark.maths) +
-        Number(mark.science) +
-        Number(mark.arts) +
-        Number(mark.other);
+        Number(fl) +
+        Number(sl) +
+        Number(ma) +
+        Number(sc) +
+        Number(ar) +
+        Number(ot);
 
     let average = total / 6;
 
@@ -196,7 +211,8 @@ function generateReport(){
 function logout(){
 
     if(confirm("Do you want to exit?")){
-        window.location.href = "dbms.home.html";
+        sessionStorage.removeItem("isLoggedIn");
+        window.location.href = "index.html";
     }
 
 }
