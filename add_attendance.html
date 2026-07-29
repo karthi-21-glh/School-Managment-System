@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Attendance</title>
     <link rel="stylesheet" href="dbms.css">
+    <script>
+        if (sessionStorage.getItem("isLoggedIn") !== "true") {
+            alert("Access Restricted! Please log in first.");
+            window.location.href = "index.html";
+        }
+    </script>
 </head>
 
 <body>
@@ -20,6 +26,8 @@
 
     <nav>
         <ul>
+
+            <li><a href="dbms_home.html">Home</a></li>
 
             <li class="dropdown">
                 Student
@@ -130,7 +138,8 @@ function logout(){
 
     if(confirm("Do you want to exit?")){
 
-        window.location.href = "dbms.home.html";
+        sessionStorage.removeItem("isLoggedIn");
+        window.location.href = "index.html";
 
     }
 
