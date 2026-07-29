@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Marks</title>
     <link rel="stylesheet" href="dbms.css">
+    <script>
+        if (sessionStorage.getItem("isLoggedIn") !== "true") {
+            alert("Access Restricted! Please log in first.");
+            window.location.href = "index.html";
+        }
+    </script>
 </head>
 
 <body>
@@ -20,6 +26,8 @@
 
     <nav>
         <ul>
+
+            <li><a href="dbms_home.html">Home</a></li>
 
             <li class="dropdown">
                 Student
@@ -122,12 +130,12 @@ function getMarks(){
 
     }
 
-    document.getElementById("firstLanguage").value = mark.firstLanguage;
-    document.getElementById("secondLanguage").value = mark.secondLanguage;
-    document.getElementById("maths").value = mark.maths;
-    document.getElementById("science").value = mark.science;
-    document.getElementById("arts").value = mark.arts;
-    document.getElementById("other").value = mark.other;
+    document.getElementById("firstLanguage").value = mark.firstlanguage || mark.firstLanguage || 0;
+    document.getElementById("secondLanguage").value = mark.secondlanguage || mark.secondLanguage || 0;
+    document.getElementById("maths").value = mark.maths || 0;
+    document.getElementById("science").value = mark.science || 0;
+    document.getElementById("arts").value = mark.arts || 0;
+    document.getElementById("other").value = mark.other || 0;
 
 }
 
@@ -149,6 +157,8 @@ document.getElementById("editMarksForm").addEventListener("submit", function(e){
 
     }
 
+    marks[index].firstlanguage = document.getElementById("firstLanguage").value;
+    marks[index].secondlanguage = document.getElementById("secondLanguage").value;
     marks[index].firstLanguage = document.getElementById("firstLanguage").value;
     marks[index].secondLanguage = document.getElementById("secondLanguage").value;
     marks[index].maths = document.getElementById("maths").value;
@@ -168,7 +178,8 @@ function logout(){
 
     if(confirm("Do you want to exit?")){
 
-        window.location.href = "dbms.home.html";
+        sessionStorage.removeItem("isLoggedIn");
+        window.location.href = "index.html";
 
     }
 
