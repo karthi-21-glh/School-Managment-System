@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Management System</title>
+    <title>School Management System - Login</title>
     <link rel="stylesheet" href="dbms.css">
 </head>
 
@@ -20,35 +20,37 @@
         <nav>
             <ul>
 
+                <li class="active"><a href="index.html">Home</a></li>
+
                 <li class="dropdown">
                     Student
                     <ul class="dropdown-content">
-                        <li><a href="add_student.html">Add Student</a></li>
-                        <li><a href="edit_student.html">Edit Student</a></li>
-                        <li><a href="delete_student.html">Delete Student</a></li>
+                        <li><a href="add_student.html" onclick="checkAuthNav(event, 'add_student.html')">Add Student</a></li>
+                        <li><a href="edit_student.html" onclick="checkAuthNav(event, 'edit_student.html')">Edit Student</a></li>
+                        <li><a href="delete_student.html" onclick="checkAuthNav(event, 'delete_student.html')">Delete Student</a></li>
                     </ul>
                 </li>
 
                 <li class="dropdown">
                     Marks
                     <ul class="dropdown-content">
-                        <li><a href="enter_marks.html">Enter Marks</a></li>
-                        <li><a href="edit_marks.html">Edit Marks</a></li>
-                        <li><a href="delete_marks.html">Delete Marks</a></li>
+                        <li><a href="enter_marks.html" onclick="checkAuthNav(event, 'enter_marks.html')">Enter Marks</a></li>
+                        <li><a href="edit_marks.html" onclick="checkAuthNav(event, 'edit_marks.html')">Edit Marks</a></li>
+                        <li><a href="delete_marks.html" onclick="checkAuthNav(event, 'delete_marks.html')">Delete Marks</a></li>
                     </ul>
                 </li>
 
                 <li class="dropdown">
                     Attendance
                     <ul class="dropdown-content">
-                        <li><a href="add_attendance.html">Add Attendance</a></li>
-                        <li><a href="edit_attendance.html">Edit Attendance</a></li>
-                        <li><a href="delete_attendance.html">Delete Attendance</a></li>
+                        <li><a href="add_attendance.html" onclick="checkAuthNav(event, 'add_attendance.html')">Add Attendance</a></li>
+                        <li><a href="edit_attendance.html" onclick="checkAuthNav(event, 'edit_attendance.html')">Edit Attendance</a></li>
+                        <li><a href="delete_attendance.html" onclick="checkAuthNav(event, 'delete_attendance.html')">Delete Attendance</a></li>
                     </ul>
                 </li>
 
                 <li>
-                    <a href="reports_html.html">Reports</a>
+                    <a href="reports_html.html" onclick="checkAuthNav(event, 'reports_html.html')">Reports</a>
                 </li>
 
                 <li onclick="logout()">Exit</li>
@@ -114,8 +116,9 @@
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
 
-            if(username === "admin" && password === "admin123"){
+            if((username === "admin" && password === "admin123") || (username === "admin" && password === "admin")){
 
+                sessionStorage.setItem("isLoggedIn", "true");
                 alert("Login Successful");
 
                 // Redirect after login
@@ -130,11 +133,20 @@
 
         });
 
+        function checkAuthNav(event, targetUrl) {
+            if (sessionStorage.getItem("isLoggedIn") !== "true") {
+                event.preventDefault();
+                alert("Access Restricted! Please log in with valid credentials first.");
+                document.getElementById("username").focus();
+            } else {
+                window.location.href = targetUrl;
+            }
+        }
+
         function logout(){
 
-            if(confirm("Do you want to exit?")){
-                window.location.href = "dbms.home.html";
-            }
+            alert("You are already on the Login page. Please log in to access the system.");
+            document.getElementById("username").focus();
 
         }
 
