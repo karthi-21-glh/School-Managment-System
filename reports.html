@@ -124,6 +124,33 @@
         <h3>Grade : <span id="grade"></span></h3>
 
         <button onclick="window.print()">Print Report</button>
+
+        <!-- ATTENDANCE REPORT -->
+        <div
+          style="
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 1px solid var(--border-color);
+          "
+        >
+          <h3>Attendance Report</h3>
+
+          <table>
+            <tr>
+              <th>Total Days</th>
+              <th>Present</th>
+              <th>Absent</th>
+              <th>Attendance Percentage</th>
+            </tr>
+
+            <tr>
+              <td id="totalDays">-</td>
+              <td id="presentDays">-</td>
+              <td id="absentDays">-</td>
+              <td id="attendancePercentage">-</td>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -189,6 +216,28 @@
               reportData.error || reportData.message || "Report not found",
             );
           }
+
+          // ------------------------------------
+          // Get attendance report from PostgreSQL
+          // ------------------------------------
+
+          const attendanceResponse = await fetch(
+            "http://localhost:5000/api/attendance-report",
+          );
+
+          const attendanceData = await attendanceResponse.json();
+
+          if (!attendanceResponse.ok) {
+            throw new Error(
+              attendanceData.error ||
+                attendanceData.message ||
+                "Attendance report not found",
+            );
+          }
+
+          const attendanceReport = attendanceData.find(
+            (student) => student.reg_no === reg,
+          );
 
           // ------------------------------------
           // Use the first marks record
@@ -260,6 +309,33 @@
             Number(average).toFixed(2);
 
           document.getElementById("grade").textContent = grade;
+
+          // ------------------------------------
+          // Display attendance report
+          // ------------------------------------
+
+          if (attendanceReport) {
+            document.getElementById("totalDays").textContent =
+              attendanceReport.total_days;
+
+            document.getElementById("presentDays").textContent =
+              attendanceReport.present_days;
+
+            document.getElementById("absentDays").textContent =
+              attendanceReport.absent_days;
+
+            document.getElementById("attendancePercentage").textContent =
+              attendanceReport.attendance_percentage !== null
+                ? `${Number(attendanceReport.attendance_percentage).toFixed(
+                    2,
+                  )}%`
+                : "N/A";
+          } else {
+            document.getElementById("totalDays").textContent = "0";
+            document.getElementById("presentDays").textContent = "0";
+            document.getElementById("absentDays").textContent = "0";
+            document.getElementById("attendancePercentage").textContent = "N/A";
+          }
 
           alert("Report generated successfully!");
         } catch (error) {
