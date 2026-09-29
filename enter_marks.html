@@ -1,165 +1,198 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Enter Marks</title>
-    <link rel="stylesheet" href="dbms.css">
+    <link rel="stylesheet" href="dbms.css" />
     <script>
-        if (sessionStorage.getItem("isLoggedIn") !== "true") {
-            alert("Access Restricted! Please log in first.");
-            window.location.href = "index.html";
-        }
+      if (sessionStorage.getItem("isLoggedIn") !== "true") {
+        alert("Access Restricted! Please log in first.");
+        window.location.href = "index.html";
+      }
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
+    <header>
+      <div class="logo">
+        <img
+          src="https://i.pinimg.com/1200x/af/85/fd/af85fd005cb098111b85832faf17f00f.jpg"
+          alt="School Logo"
+        />
+      </div>
 
-<header>
+      <h1>School Management System</h1>
 
-    <div class="logo">
-        <img src="https://i.pinimg.com/1200x/af/85/fd/af85fd005cb098111b85832faf17f00f.jpg" alt="School Logo">
-    </div>
-
-    <h1>School Management System</h1>
-
-    <nav>
+      <nav>
         <ul>
+          <li><a href="dbms_home.html">Home</a></li>
 
-            <li><a href="dbms_home.html">Home</a></li>
+          <li class="dropdown">
+            Student
+            <ul class="dropdown-content">
+              <li><a href="add_student.html">Add Student</a></li>
+              <li><a href="edit_student.html">Edit Student</a></li>
+              <li><a href="delete_student.html">Delete Student</a></li>
+            </ul>
+          </li>
 
-            <li class="dropdown">
-                Student
-                <ul class="dropdown-content">
-                    <li><a href="add_student.html">Add Student</a></li>
-                    <li><a href="edit_student.html">Edit Student</a></li>
-                    <li><a href="delete_student.html">Delete Student</a></li>
-                </ul>
-            </li>
+          <li class="dropdown">
+            Marks
+            <ul class="dropdown-content">
+              <li><a href="enter_marks.html">Enter Marks</a></li>
+              <li><a href="edit_marks.html">Edit Marks</a></li>
+              <li><a href="delete_marks.html">Delete Marks</a></li>
+            </ul>
+          </li>
 
-            <li class="dropdown">
-                Marks
-                <ul class="dropdown-content">
-                    <li><a href="enter_marks.html">Enter Marks</a></li>
-                    <li><a href="edit_marks.html">Edit Marks</a></li>
-                    <li><a href="delete_marks.html">Delete Marks</a></li>
-                </ul>
-            </li>
+          <li class="dropdown">
+            Attendance
+            <ul class="dropdown-content">
+              <li><a href="add_attendance.html">Add Attendance</a></li>
+              <li><a href="edit_attendance.html">Edit Attendance</a></li>
+              <li><a href="delete_attendance.html">Delete Attendance</a></li>
+            </ul>
+          </li>
 
-            <li class="dropdown">
-                Attendance
-                <ul class="dropdown-content">
-                    <li><a href="add_attendance.html">Add Attendance</a></li>
-                    <li><a href="edit_attendance.html">Edit Attendance</a></li>
-                    <li><a href="delete_attendance.html">Delete Attendance</a></li>
-                </ul>
-            </li>
+          <li>
+            <a href="reports.html">Reports</a>
+          </li>
 
-            <li>
-                <a href="reports_html.html">Reports</a>
-            </li>
-
-            <li onclick="logout()">Exit</li>
-
+          <li onclick="logout()">Exit</li>
         </ul>
-    </nav>
+      </nav>
+    </header>
 
-</header>
+    <div class="container">
+      <h2>ENTER MARKS</h2>
 
-<div class="container">
-
-    <h2>ENTER MARKS</h2>
-
-    <form id="marksForm">
-
+      <form id="marksForm">
         <label>Registration Number</label>
-        <input type="text" id="regno" required>
+        <input type="text" id="regno" required />
 
         <label>Exam</label>
         <select id="exam">
-            <option>Class Test 1</option>
-            <option>Class Test 2</option>
-            <option>Mid Term</option>
-            <option>Half Yearly</option>
-            <option>Final Exam</option>
+          <option>Class Test 1</option>
+          <option>Class Test 2</option>
+          <option>Mid Term</option>
+          <option>Half Yearly</option>
+          <option>Final Exam</option>
         </select>
 
         <label>First Language</label>
-        <input type="number" id="firstlanguage" min="0" max="100" required>
+        <input type="number" id="firstlanguage" min="0" max="100" required />
 
         <label>Second Language</label>
-        <input type="number" id="secondlanguage" min="0" max="100" required>
+        <input type="number" id="secondlanguage" min="0" max="100" required />
 
         <label>Mathematics</label>
-        <input type="number" id="maths" min="0" max="100" required>
+        <input type="number" id="maths" min="0" max="100" required />
 
         <label>Science</label>
-        <input type="number" id="science" min="0" max="100" required>
+        <input type="number" id="science" min="0" max="100" required />
 
         <label>Arts</label>
-        <input type="number" id="arts" min="0" max="100" required>
+        <input type="number" id="arts" min="0" max="100" required />
 
         <label>Other (If Any)</label>
-        <input type="number" id="other" min="0" max="100" value="0">
+        <input type="number" id="other" min="0" max="100" value="0" />
 
         <button type="submit">Save Marks</button>
+      </form>
+    </div>
 
-    </form>
+    <script>
+      document
+        .getElementById("marksForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
 
-</div>
+          const reg_no = document.getElementById("regno").value.trim();
 
-<script>
+          const exam_type = document.getElementById("exam").value;
 
-document.getElementById("marksForm").addEventListener("submit", function(e){
+          const marks = {
+            reg_no: reg_no,
+            exam_type: exam_type,
+            first_language: Number(
+              document.getElementById("firstlanguage").value,
+            ),
+            second_language: Number(
+              document.getElementById("secondlanguage").value,
+            ),
+            mathematics: Number(document.getElementById("maths").value),
+            science: Number(document.getElementById("science").value),
+            arts: Number(document.getElementById("arts").value),
+            others: Number(document.getElementById("other").value || 0),
+          };
 
-    e.preventDefault();
+          try {
+            // Check whether the student exists
+            const studentResponse = await fetch(
+              `http://localhost:5000/api/students/${encodeURIComponent(reg_no)}`,
+            );
 
-    let mark = {
+            if (!studentResponse.ok) {
+              throw new Error(
+                "Student with this Registration Number does not exist.",
+              );
+            }
 
-        regno: document.getElementById("regno").value,
-        exam: document.getElementById("exam").value,
+            // Check existing marks for this student
+            const marksResponse = await fetch(
+              `http://localhost:5000/api/marks/${encodeURIComponent(reg_no)}`,
+            );
 
-        firstlanguage: document.getElementById("firstlanguage").value,
-        secondlanguage: document.getElementById("secondlanguage").value,
-        maths: document.getElementById("maths").value,
-        science: document.getElementById("science").value,
-        arts: document.getElementById("arts").value,
-        other: document.getElementById("other").value
+            const existingMarks = await marksResponse.json();
 
-    };
+            if (marksResponse.ok && Array.isArray(existingMarks)) {
+              const alreadyExists = existingMarks.some(
+                (mark) => mark.exam_type === exam_type,
+              );
 
-    let marks = JSON.parse(localStorage.getItem("marks")) || [];
+              if (alreadyExists) {
+                alert("Marks for this exam already exist!");
+                return;
+              }
+            }
 
-    let exists = marks.find(m =>
-        m.regno === mark.regno &&
-        m.exam === mark.exam
-    );
+            // Send marks to PostgreSQL through the backend
+            const response = await fetch("http://localhost:5000/api/marks", {
+              method: "POST",
 
-    if(exists){
-        alert("Marks for this exam already exist!");
-        return;
-    }
+              headers: {
+                "Content-Type": "application/json",
+              },
 
-    marks.push(mark);
+              body: JSON.stringify(marks),
+            });
 
-    localStorage.setItem("marks", JSON.stringify(marks));
+            const data = await response.json();
 
-    alert("Marks Saved Successfully!");
+            if (!response.ok) {
+              throw new Error(
+                data.error || data.message || "Failed to save marks",
+              );
+            }
 
-    this.reset();
+            alert("Marks Saved Successfully!");
 
-});
+            this.reset();
+          } catch (error) {
+            console.error("Error saving marks:", error);
 
-function logout(){
+            alert("Failed to save marks: " + error.message);
+          }
+        });
 
-    if(confirm("Do you want to exit?")){
-        sessionStorage.removeItem("isLoggedIn");
-        window.location.href = "index.html";
-    }
+      function logout() {
+        if (confirm("Do you want to exit?")) {
+          sessionStorage.removeItem("isLoggedIn");
 
-}
-
-</script>
-
-</body>
+          window.location.href = "index.html";
+        }
+      }
+    </script>
+  </body>
 </html>

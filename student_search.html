@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Directory</title>
+    <link rel="stylesheet" href="dbms.css" />
+
+    <script>
+      if (sessionStorage.getItem("isLoggedIn") !== "true") {
+        alert("Access Restricted! Please log in first.");
+        window.location.href = "index.html";
+      }
+    </script>
+  </head>
+
+  <body>
+    <header>
+      <div class="logo">
+        <img
+          src="https://i.pinimg.com/1200x/af/85/fd/af85fd005cb098111b85832faf17f00f.jpg"
+          alt="School Logo"
+        />
+      </div>
+
+      <h1>School Management System</h1>
+
+      <nav>
+        <ul>
+          <li><a href="dbms_home.html">Home</a></li>
+
+          <li class="dropdown">
+            Student
+            <ul class="dropdown-content">
+              <li><a href="add_student.html">Add Student</a></li>
+              <li><a href="edit_student.html">Edit Student</a></li>
+              <li><a href="delete_student.html">Delete Student</a></li>
+              <li>
+                <a href="student_search.html">Student Directory</a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="dropdown">
+            Marks
+            <ul class="dropdown-content">
+              <li><a href="enter_marks.html">Enter Marks</a></li>
+              <li><a href="edit_marks.html">Edit Marks</a></li>
+              <li><a href="delete_marks.html">Delete Marks</a></li>
+            </ul>
+          </li>
+
+          <li class="dropdown">
+            Attendance
+            <ul class="dropdown-content">
+              <li><a href="add_attendance.html">Add Attendance</a></li>
+              <li><a href="edit_attendance.html">Edit Attendance</a></li>
+              <li><a href="delete_attendance.html">Delete Attendance</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <a href="reports.html">Reports</a>
+          </li>
+
+          <li onclick="logout()">Exit</li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="report-container">
+      <h2>STUDENT DIRECTORY</h2>
+
+      <p style="color: var(--text-secondary); margin-bottom: 25px">
+        Search and filter student records directly from the PostgreSQL database.
+      </p>
+
+      <!-- SEARCH FILTERS -->
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 15px;
+          margin-bottom: 25px;
+        "
+      >
+        <div>
+          <label for="regNo">Registration Number</label>
+          <input type="text" id="regNo" placeholder="e.g. STU001" />
+        </div>
+
+        <div>
+          <label for="name">Student Name</label>
+          <input type="text" id="name" placeholder="e.g. Rahul" />
+        </div>
+
+        <div>
+          <label for="className">Class</label>
+          <input type="text" id="className" placeholder="e.g. 10 A" />
+        </div>
+
+        <div>
+          <label for="gender">Gender</label>
+          <select id="gender">
+            <option value="">All Genders</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; margin-bottom: 30px">
+        <button onclick="searchStudents()">Search Students</button>
+
+        <button
+          onclick="clearSearch()"
+          style="
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
+          "
+        >
+          Clear
+        </button>
+      </div>
+
+      <!-- SEARCH RESULTS -->
+      <div id="results">
+        <p style="color: var(--text-muted)">
+          Enter search criteria and click Search Students.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      async function searchStudents() {
+        const regNo = document.getElementById("regNo").value.trim();
+        const name = document.getElementById("name").value.trim();
+        const className = document.getElementById("className").value.trim();
+        const gender = document.getElementById("gender").value;
+
+        const params = new URLSearchParams();
+
+        if (regNo) params.append("reg_no", regNo);
+        if (name) params.append("name", name);
+        if (className) params.append("class_name", className);
+        if (gender) params.append("gender", gender);
+
+        const results = document.getElementById("results");
+
+        results.innerHTML = `
+          <p style="color: var(--text-muted)">
+            Searching PostgreSQL...
+          </p>
+        `;
+
+        try {
+          const response = await fetch(
+            `http://localhost:5000/api/student-search?${params.toString()}`,
+          );
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Failed to search students");
+          }
+
+          if (data.length === 0) {
+            results.innerHTML = `
+              <div
+                style="
+                  padding: 20px;
+                  background: var(--bg-card);
+                  border: 1px solid var(--border-color);
+                  border-radius: var(--radius-md);
+                  color: var(--text-secondary);
+                "
+              >
+                No students found matching the selected criteria.
+              </div>
+            `;
+
+            return;
+          }
+
+          results.innerHTML = `
+            <div style="overflow-x: auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Registration No.</th>
+                    <th>Name</th>
+                    <th>Class</th>
+                    <th>Gender</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>City</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  ${data
+                    .map(
+                      (student) => `
+                        <tr>
+                          <td>${student.reg_no}</td>
+                          <td>${student.full_name}</td>
+                          <td>${student.class || "-"}</td>
+                          <td>${student.gender || "-"}</td>
+                          <td>${student.phone || "-"}</td>
+                          <td>${student.email || "-"}</td>
+                          <td>${student.city || "-"}</td>
+                        </tr>
+                      `,
+                    )
+                    .join("")}
+                </tbody>
+              </table>
+            </div>
+
+            <p
+              style="
+                margin-top: 15px;
+                color: var(--text-secondary);
+                font-size: 14px;
+              "
+            >
+              ${data.length} student(s) found.
+            </p>
+          `;
+        } catch (error) {
+          console.error("Student search error:", error);
+
+          results.innerHTML = `
+            <p style="color: #ef4444">
+              Failed to search students: ${error.message}
+            </p>
+          `;
+        }
+      }
+
+      function clearSearch() {
+        document.getElementById("regNo").value = "";
+        document.getElementById("name").value = "";
+        document.getElementById("className").value = "";
+        document.getElementById("gender").value = "";
+
+        document.getElementById("results").innerHTML = `
+          <p style="color: var(--text-muted)">
+            Enter search criteria and click Search Students.
+          </p>
+        `;
+      }
+
+      function logout() {
+        if (confirm("Do you want to exit?")) {
+          sessionStorage.removeItem("isLoggedIn");
+          window.location.href = "index.html";
+        }
+      }
+    </script>
+  </body>
+</html>

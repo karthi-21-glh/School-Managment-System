@@ -1,174 +1,234 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Edit Attendance</title>
-    <link rel="stylesheet" href="dbms.css">
+    <link rel="stylesheet" href="dbms.css" />
     <script>
-        if (sessionStorage.getItem("isLoggedIn") !== "true") {
-            alert("Access Restricted! Please log in first.");
-            window.location.href = "index.html";
-        }
+      if (sessionStorage.getItem("isLoggedIn") !== "true") {
+        alert("Access Restricted! Please log in first.");
+        window.location.href = "index.html";
+      }
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
+    <header>
+      <div class="logo">
+        <img
+          src="https://i.pinimg.com/1200x/af/85/fd/af85fd005cb098111b85832faf17f00f.jpg"
+          alt="School Logo"
+        />
+      </div>
 
-<header>
+      <h1>School Management System</h1>
 
-    <div class="logo">
-        <img src="https://i.pinimg.com/1200x/af/85/fd/af85fd005cb098111b85832faf17f00f.jpg" alt="School Logo">
-    </div>
-
-    <h1>School Management System</h1>
-
-    <nav>
+      <nav>
         <ul>
+          <li><a href="dbms_home.html">Home</a></li>
 
-            <li><a href="dbms_home.html">Home</a></li>
+          <li class="dropdown">
+            Student
+            <ul class="dropdown-content">
+              <li><a href="add_student.html">Add Student</a></li>
+              <li><a href="edit_student.html">Edit Student</a></li>
+              <li><a href="delete_student.html">Delete Student</a></li>
+            </ul>
+          </li>
 
-            <li class="dropdown">
-                Student
-                <ul class="dropdown-content">
-                    <li><a href="add_student.html">Add Student</a></li>
-                    <li><a href="edit_student.html">Edit Student</a></li>
-                    <li><a href="delete_student.html">Delete Student</a></li>
-                </ul>
-            </li>
+          <li class="dropdown">
+            Marks
+            <ul class="dropdown-content">
+              <li><a href="enter_marks.html">Enter Marks</a></li>
+              <li><a href="edit_marks.html">Edit Marks</a></li>
+              <li><a href="delete_marks.html">Delete Marks</a></li>
+            </ul>
+          </li>
 
-            <li class="dropdown">
-                Marks
-                <ul class="dropdown-content">
-                    <li><a href="enter_marks.html">Enter Marks</a></li>
-                    <li><a href="edit_marks.html">Edit Marks</a></li>
-                    <li><a href="delete_marks.html">Delete Marks</a></li>
-                </ul>
-            </li>
+          <li class="dropdown">
+            Attendance
+            <ul class="dropdown-content">
+              <li><a href="add_attendance.html">Add Attendance</a></li>
+              <li><a href="edit_attendance.html">Edit Attendance</a></li>
+              <li><a href="delete_attendance.html">Delete Attendance</a></li>
+            </ul>
+          </li>
 
-            <li class="dropdown">
-                Attendance
-                <ul class="dropdown-content">
-                    <li><a href="add_attendance.html">Add Attendance</a></li>
-                    <li><a href="edit_attendance.html">Edit Attendance</a></li>
-                    <li><a href="delete_attendance.html">Delete Attendance</a></li>
-                </ul>
-            </li>
+          <li>
+            <a href="reports.html">Reports</a>
+          </li>
 
-            <li>
-                <a href="reports_html.html">Reports</a>
-            </li>
-
-            <li onclick="logout()">Exit</li>
-
+          <li onclick="logout()">Exit</li>
         </ul>
-    </nav>
+      </nav>
+    </header>
 
-</header>
+    <div class="container">
+      <h2>EDIT ATTENDANCE</h2>
 
-<div class="container">
+      <label>Registration Number</label>
+      <input type="text" id="regno" />
 
-    <h2>EDIT ATTENDANCE</h2>
+      <label>Date</label>
+      <input type="date" id="date" />
 
-    <label>Registration Number</label>
-    <input type="text" id="regno">
+      <button type="button" onclick="getAttendance()">Get Attendance</button>
 
-    <label>Date</label>
-    <input type="date" id="date">
-
-    <button type="button" onclick="getAttendance()">Get Attendance</button>
-
-    <form id="editForm">
-
+      <form id="editForm">
         <label>Student Name</label>
-        <input type="text" id="name" required>
+        <input type="text" id="name" required />
 
         <label>Status</label>
         <select id="status" required>
-            <option value="">Select</option>
-            <option>Present</option>
-            <option>Absent</option>
+          <option value="">Select</option>
+          <option>Present</option>
+          <option>Absent</option>
         </select>
 
         <button type="submit">Update Attendance</button>
+      </form>
+    </div>
 
-    </form>
+    <script>
+      let currentAttendanceId = null;
 
-</div>
+      async function getAttendance() {
+        const regno = document.getElementById("regno").value.trim();
 
-<script>
+        const date = document.getElementById("date").value;
 
-function getAttendance(){
+        if (!regno || !date) {
+          alert("Please enter Registration Number and Date.");
+          return;
+        }
 
-    let regno = document.getElementById("regno").value;
-    let date = document.getElementById("date").value;
+        try {
+          const response = await fetch(
+            `http://localhost:5000/api/attendance/${encodeURIComponent(regno)}`,
+          );
 
-    let attendance = JSON.parse(localStorage.getItem("attendance")) || [];
+          const data = await response.json();
 
-    let record = attendance.find(a =>
-        a.regno === regno &&
-        a.date === date
-    );
+          if (!response.ok) {
+            throw new Error(
+              data.error || data.message || "Failed to retrieve attendance",
+            );
+          }
 
-    if(!record){
+          if (!Array.isArray(data)) {
+            throw new Error("Invalid attendance data received.");
+          }
 
-        alert("Attendance record not found!");
-        return;
+          // Find attendance for the selected date
+          const record = data.find((attendance) => {
+            if (!attendance.attendance_date) {
+              return false;
+            }
 
-    }
+            const attendanceDate = new Date(
+              attendance.attendance_date,
+            ).toLocaleDateString("en-CA", {
+              timeZone: "Asia/Kolkata",
+            });
 
-    document.getElementById("name").value = record.name;
-    document.getElementById("status").value = record.status;
+            return attendanceDate === date;
+          });
 
-}
+          if (!record) {
+            currentAttendanceId = null;
 
-document.getElementById("editForm").addEventListener("submit", function(e){
+            document.getElementById("name").value = "";
+            document.getElementById("status").value = "";
 
-    e.preventDefault();
+            alert("Attendance record not found.");
+            return;
+          }
 
-    let regno = document.getElementById("regno").value;
-    let date = document.getElementById("date").value;
+          // Store database attendance ID
+          currentAttendanceId = record.attend_id;
 
-    let attendance = JSON.parse(localStorage.getItem("attendance")) || [];
+          // Fill student name
+          document.getElementById("name").value = record.full_name || "";
 
-    let index = attendance.findIndex(a =>
-        a.regno === regno &&
-        a.date === date
-    );
+          // Fill current attendance status
+          document.getElementById("status").value = record.status || "";
 
-    if(index === -1){
+          alert("Attendance details loaded successfully!");
+        } catch (error) {
+          console.error("Error getting attendance:", error);
 
-        alert("Attendance record not found!");
-        return;
+          alert("Failed to get attendance: " + error.message);
+        }
+      }
 
-    }
+      document
+        .getElementById("editForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
 
-    attendance[index].name = document.getElementById("name").value;
-    attendance[index].status = document.getElementById("status").value;
+          if (!currentAttendanceId) {
+            alert("Please get the attendance record first.");
+            return;
+          }
 
-    localStorage.setItem("attendance", JSON.stringify(attendance));
+          const status = document.getElementById("status").value;
 
-    alert("Attendance Updated Successfully!");
+          if (!status) {
+            alert("Please select an attendance status.");
+            return;
+          }
 
-    document.getElementById("editForm").reset();
-    document.getElementById("regno").value = "";
-    document.getElementById("date").value = "";
+          const attendance = {
+            attendance_date: document.getElementById("date").value,
 
-});
+            status: status,
+          };
 
-function logout(){
+          try {
+            const response = await fetch(
+              `http://localhost:5000/api/attendance/${currentAttendanceId}`,
+              {
+                method: "PUT",
 
-    if(confirm("Do you want to exit?")){
+                headers: {
+                  "Content-Type": "application/json",
+                },
 
-        sessionStorage.removeItem("isLoggedIn");
-        window.location.href = "index.html";
+                body: JSON.stringify(attendance),
+              },
+            );
 
-    }
+            const data = await response.json();
 
-}
+            if (!response.ok) {
+              throw new Error(
+                data.error || data.message || "Failed to update attendance",
+              );
+            }
 
-</script>
+            alert("Attendance Updated Successfully!");
 
-</body>
+            document.getElementById("editForm").reset();
+
+            document.getElementById("regno").value = "";
+            document.getElementById("date").value = "";
+
+            currentAttendanceId = null;
+          } catch (error) {
+            console.error("Error updating attendance:", error);
+
+            alert("Failed to update attendance: " + error.message);
+          }
+        });
+
+      function logout() {
+        if (confirm("Do you want to exit?")) {
+          sessionStorage.removeItem("isLoggedIn");
+
+          window.location.href = "index.html";
+        }
+      }
+    </script>
+  </body>
 </html>
