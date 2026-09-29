@@ -1,140 +1,188 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Delete Attendance</title>
-    <link rel="stylesheet" href="dbms.css">
+    <link rel="stylesheet" href="dbms.css" />
     <script>
-        if (sessionStorage.getItem("isLoggedIn") !== "true") {
-            alert("Access Restricted! Please log in first.");
-            window.location.href = "index.html";
-        }
+      if (sessionStorage.getItem("isLoggedIn") !== "true") {
+        alert("Access Restricted! Please log in first.");
+        window.location.href = "index.html";
+      }
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
+    <header>
+      <div class="logo">
+        <img
+          src="https://i.pinimg.com/1200x/af/85/fd/af85fd005cb098111b85832faf17f00f.jpg"
+          alt="School Logo"
+        />
+      </div>
 
-<header>
+      <h1>School Management System</h1>
 
-    <div class="logo">
-        <img src="https://i.pinimg.com/1200x/af/85/fd/af85fd005cb098111b85832faf17f00f.jpg" alt="School Logo">
-    </div>
-
-    <h1>School Management System</h1>
-
-    <nav>
+      <nav>
         <ul>
+          <li><a href="dbms_home.html">Home</a></li>
 
-            <li><a href="dbms_home.html">Home</a></li>
+          <li class="dropdown">
+            Student
+            <ul class="dropdown-content">
+              <li><a href="add_student.html">Add Student</a></li>
+              <li><a href="edit_student.html">Edit Student</a></li>
+              <li><a href="delete_student.html">Delete Student</a></li>
+            </ul>
+          </li>
 
-            <li class="dropdown">
-                Student
-                <ul class="dropdown-content">
-                    <li><a href="add_student.html">Add Student</a></li>
-                    <li><a href="edit_student.html">Edit Student</a></li>
-                    <li><a href="delete_student.html">Delete Student</a></li>
-                </ul>
-            </li>
+          <li class="dropdown">
+            Marks
+            <ul class="dropdown-content">
+              <li><a href="enter_marks.html">Enter Marks</a></li>
+              <li><a href="edit_marks.html">Edit Marks</a></li>
+              <li><a href="delete_marks.html">Delete Marks</a></li>
+            </ul>
+          </li>
 
-            <li class="dropdown">
-                Marks
-                <ul class="dropdown-content">
-                    <li><a href="enter_marks.html">Enter Marks</a></li>
-                    <li><a href="edit_marks.html">Edit Marks</a></li>
-                    <li><a href="delete_marks.html">Delete Marks</a></li>
-                </ul>
-            </li>
+          <li class="dropdown">
+            Attendance
+            <ul class="dropdown-content">
+              <li><a href="add_attendance.html">Add Attendance</a></li>
+              <li><a href="edit_attendance.html">Edit Attendance</a></li>
+              <li><a href="delete_attendance.html">Delete Attendance</a></li>
+            </ul>
+          </li>
 
-            <li class="dropdown">
-                Attendance
-                <ul class="dropdown-content">
-                    <li><a href="add_attendance.html">Add Attendance</a></li>
-                    <li><a href="edit_attendance.html">Edit Attendance</a></li>
-                    <li><a href="delete_attendance.html">Delete Attendance</a></li>
-                </ul>
-            </li>
+          <li>
+            <a href="reports_html.html">Reports</a>
+          </li>
 
-            <li>
-                <a href="reports_html.html">Reports</a>
-            </li>
-
-            <li onclick="logout()">Exit</li>
-
+          <li onclick="logout()">Exit</li>
         </ul>
-    </nav>
+      </nav>
+    </header>
 
-</header>
+    <div class="container">
+      <h2>DELETE ATTENDANCE</h2>
 
-<div class="container">
-
-    <h2>DELETE ATTENDANCE</h2>
-
-    <form id="deleteForm">
-
+      <form id="deleteForm">
         <label>Registration Number</label>
-        <input type="text" id="regno" required>
+        <input type="text" id="regno" required />
 
         <label>Date</label>
-        <input type="date" id="date" required>
+        <input type="date" id="date" required />
 
         <button type="submit">Delete Attendance</button>
+      </form>
+    </div>
 
-    </form>
+    <script>
+      let currentAttendanceId = null;
 
-</div>
+      document
+        .getElementById("deleteForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
 
-<script>
+          const regno = document.getElementById("regno").value.trim();
 
-document.getElementById("deleteForm").addEventListener("submit", function(e){
+          const date = document.getElementById("date").value;
 
-    e.preventDefault();
+          if (!regno || !date) {
+            alert("Please enter Registration Number and Date.");
+            return;
+          }
 
-    let regno = document.getElementById("regno").value;
-    let date = document.getElementById("date").value;
+          try {
+            // Get all attendance records for this student
+            const response = await fetch(
+              `http://localhost:5000/api/attendance/${encodeURIComponent(regno)}`,
+            );
 
-    let attendance = JSON.parse(localStorage.getItem("attendance")) || [];
+            const data = await response.json();
 
-    let index = attendance.findIndex(a =>
-        a.regno === regno &&
-        a.date === date
-    );
+            if (!response.ok) {
+              throw new Error(
+                data.error || data.message || "Failed to retrieve attendance",
+              );
+            }
 
-    if(index === -1){
+            if (!Array.isArray(data)) {
+              throw new Error("Invalid attendance data received.");
+            }
 
-        alert("Attendance record not found!");
-        return;
+            // Find the attendance record for the selected date
+            const record = data.find((attendance) => {
+              if (!attendance.attendance_date) {
+                return false;
+              }
 
-    }
+              const attendanceDate = new Date(
+                attendance.attendance_date,
+              ).toLocaleDateString("en-CA", {
+                timeZone: "Asia/Kolkata",
+              });
 
-    if(confirm("Are you sure you want to delete this attendance record?")){
+              return attendanceDate === date;
+            });
 
-        attendance.splice(index, 1);
+            if (!record) {
+              alert("Attendance record not found.");
+              return;
+            }
 
-        localStorage.setItem("attendance", JSON.stringify(attendance));
+            // Store the database ID
+            currentAttendanceId = record.attend_id;
 
-        alert("Attendance Deleted Successfully!");
+            // Ask for confirmation
+            if (
+              !confirm(
+                "Are you sure you want to delete this attendance record?",
+              )
+            ) {
+              currentAttendanceId = null;
+              return;
+            }
 
-        this.reset();
+            // Delete from PostgreSQL
+            const deleteResponse = await fetch(
+              `http://localhost:5000/api/attendance/${currentAttendanceId}`,
+              {
+                method: "DELETE",
+              },
+            );
 
-    }
+            const deleteData = await deleteResponse.json();
 
-});
+            if (!deleteResponse.ok) {
+              throw new Error(
+                deleteData.error ||
+                  deleteData.message ||
+                  "Failed to delete attendance",
+              );
+            }
 
-function logout(){
+            alert("Attendance Deleted Successfully!");
 
-    if(confirm("Do you want to exit?")){
+            this.reset();
 
-        sessionStorage.removeItem("isLoggedIn");
-        window.location.href = "index.html";
+            currentAttendanceId = null;
+          } catch (error) {
+            console.error("Error deleting attendance:", error);
 
-    }
+            alert("Failed to delete attendance: " + error.message);
+          }
+        });
 
-}
+      function logout() {
+        if (confirm("Do you want to exit?")) {
+          sessionStorage.removeItem("isLoggedIn");
 
-</script>
-
-</body>
-
+          window.location.href = "index.html";
+        }
+      }
+    </script>
+  </body>
 </html>
