@@ -1,180 +1,231 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Delete Marks</title>
-    <link rel="stylesheet" href="dbms.css">
+    <link rel="stylesheet" href="dbms.css" />
     <script>
-        if (sessionStorage.getItem("isLoggedIn") !== "true") {
-            alert("Access Restricted! Please log in first.");
-            window.location.href = "index.html";
-        }
+      if (sessionStorage.getItem("isLoggedIn") !== "true") {
+        alert("Access Restricted! Please log in first.");
+        window.location.href = "index.html";
+      }
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
+    <header>
+      <div class="logo">
+        <img
+          src="https://i.pinimg.com/1200x/af/85/fd/af85fd005cb098111b85832faf17f00f.jpg"
+          alt="School Logo"
+        />
+      </div>
 
-<header>
+      <h1>School Management System</h1>
 
-    <div class="logo">
-        <img src="https://i.pinimg.com/1200x/af/85/fd/af85fd005cb098111b85832faf17f00f.jpg" alt="School Logo">
-    </div>
-
-    <h1>School Management System</h1>
-
-    <nav>
+      <nav>
         <ul>
+          <li><a href="dbms_home.html">Home</a></li>
 
-            <li><a href="dbms_home.html">Home</a></li>
+          <li class="dropdown">
+            Student
+            <ul class="dropdown-content">
+              <li><a href="add_student.html">Add Student</a></li>
+              <li><a href="edit_student.html">Edit Student</a></li>
+              <li><a href="delete_student.html">Delete Student</a></li>
+            </ul>
+          </li>
 
-            <li class="dropdown">
-                Student
-                <ul class="dropdown-content">
-                    <li><a href="add_student.html">Add Student</a></li>
-                    <li><a href="edit_student.html">Edit Student</a></li>
-                    <li><a href="delete_student.html">Delete Student</a></li>
-                </ul>
-            </li>
+          <li class="dropdown">
+            Marks
+            <ul class="dropdown-content">
+              <li><a href="enter_marks.html">Enter Marks</a></li>
+              <li><a href="edit_marks.html">Edit Marks</a></li>
+              <li><a href="delete_marks.html">Delete Marks</a></li>
+            </ul>
+          </li>
 
-            <li class="dropdown">
-                Marks
-                <ul class="dropdown-content">
-                    <li><a href="enter_marks.html">Enter Marks</a></li>
-                    <li><a href="edit_marks.html">Edit Marks</a></li>
-                    <li><a href="delete_marks.html">Delete Marks</a></li>
-                </ul>
-            </li>
+          <li class="dropdown">
+            Attendance
+            <ul class="dropdown-content">
+              <li><a href="add_attendance.html">Add Attendance</a></li>
+              <li><a href="edit_attendance.html">Edit Attendance</a></li>
+              <li><a href="delete_attendance.html">Delete Attendance</a></li>
+            </ul>
+          </li>
 
-            <li class="dropdown">
-                Attendance
-                <ul class="dropdown-content">
-                    <li><a href="add_attendance.html">Add Attendance</a></li>
-                    <li><a href="edit_attendance.html">Edit Attendance</a></li>
-                    <li><a href="delete_attendance.html">Delete Attendance</a></li>
-                </ul>
-            </li>
+          <li>
+            <a href="reports_html.html">Reports</a>
+          </li>
 
-            <li>
-                <a href="reports_html.html">Reports</a>
-            </li>
-
-            <li onclick="logout()">Exit</li>
-
+          <li onclick="logout()">Exit</li>
         </ul>
-    </nav>
+      </nav>
+    </header>
 
-</header>
+    <div class="container">
+      <h2>DELETE MARKS</h2>
 
-<div class="container">
-
-    <h2>DELETE MARKS</h2>
-
-    <form id="deleteMarksForm">
-
+      <form id="deleteMarksForm">
         <label>Registration Number</label>
-        <input type="text" id="regno" required>
+        <input type="text" id="regno" required />
 
         <label>Exam</label>
         <select id="exam">
-            <option>Class Test 1</option>
-            <option>Class Test 2</option>
-            <option>Mid Term</option>
-            <option>Half Yearly</option>
-            <option>Final Exam</option>
+          <option>Class Test 1</option>
+          <option>Class Test 2</option>
+          <option>Mid Term</option>
+          <option>Half Yearly</option>
+          <option>Final Exam</option>
         </select>
 
         <button type="button" onclick="getMarks()">Get Marks</button>
 
         <label>First Language</label>
-        <input type="number" id="firstLanguage" readonly>
+        <input type="number" id="firstLanguage" readonly />
 
         <label>Second Language</label>
-        <input type="number" id="secondLanguage" readonly>
+        <input type="number" id="secondLanguage" readonly />
 
         <label>Mathematics</label>
-        <input type="number" id="maths" readonly>
+        <input type="number" id="maths" readonly />
 
         <label>Science</label>
-        <input type="number" id="science" readonly>
+        <input type="number" id="science" readonly />
 
         <label>Arts</label>
-        <input type="number" id="arts" readonly>
+        <input type="number" id="arts" readonly />
 
         <label>Other (if any)</label>
-        <input type="number" id="other" readonly>
+        <input type="number" id="other" readonly />
 
         <button type="submit">Delete Marks</button>
+      </form>
+    </div>
 
-    </form>
+    <script>
+      let currentMarkId = null;
 
-</div>
+      async function getMarks() {
+        const regno = document.getElementById("regno").value.trim();
 
-<script>
+        const exam = document.getElementById("exam").value;
 
-function getMarks(){
+        if (!regno) {
+          alert("Please enter a Registration Number.");
+          return;
+        }
 
-    let regno = document.getElementById("regno").value;
-    let exam = document.getElementById("exam").value;
+        try {
+          const response = await fetch(
+            `http://localhost:5000/api/marks/${encodeURIComponent(regno)}`,
+          );
 
-    let marks = JSON.parse(localStorage.getItem("marks")) || [];
+          const data = await response.json();
 
-    let mark = marks.find(m => m.regno === regno && m.exam === exam);
+          if (!response.ok) {
+            throw new Error(
+              data.error || data.message || "Failed to retrieve marks",
+            );
+          }
 
-    if(!mark){
+          if (!Array.isArray(data)) {
+            throw new Error("Invalid marks data received from server.");
+          }
 
-        alert("Marks not found!");
-        return;
+          // Find the selected exam
+          const mark = data.find((m) => m.exam_type === exam);
 
-    }
+          if (!mark) {
+            currentMarkId = null;
 
-    document.getElementById("firstLanguage").value = mark.firstlanguage || mark.firstLanguage || 0;
-    document.getElementById("secondLanguage").value = mark.secondlanguage || mark.secondLanguage || 0;
-    document.getElementById("maths").value = mark.maths || 0;
-    document.getElementById("science").value = mark.science || 0;
-    document.getElementById("arts").value = mark.arts || 0;
-    document.getElementById("other").value = mark.other || 0;
+            document.getElementById("firstLanguage").value = "";
+            document.getElementById("secondLanguage").value = "";
+            document.getElementById("maths").value = "";
+            document.getElementById("science").value = "";
+            document.getElementById("arts").value = "";
+            document.getElementById("other").value = "";
 
-}
+            alert("Marks not found for this exam.");
+            return;
+          }
 
-document.getElementById("deleteMarksForm").addEventListener("submit", function(e){
+          // Store the database mark_id
+          currentMarkId = mark.mark_id;
 
-    e.preventDefault();
+          // Display the marks
+          document.getElementById("firstLanguage").value =
+            mark.first_language ?? 0;
 
-    if(!confirm("Are you sure you want to delete these marks?")){
+          document.getElementById("secondLanguage").value =
+            mark.second_language ?? 0;
 
-        return;
+          document.getElementById("maths").value = mark.mathematics ?? 0;
 
-    }
+          document.getElementById("science").value = mark.science ?? 0;
 
-    let regno = document.getElementById("regno").value;
-    let exam = document.getElementById("exam").value;
+          document.getElementById("arts").value = mark.arts ?? 0;
 
-    let marks = JSON.parse(localStorage.getItem("marks")) || [];
+          document.getElementById("other").value = mark.others ?? 0;
 
-    marks = marks.filter(m => !(m.regno === regno && m.exam === exam));
+          alert("Marks loaded successfully!");
+        } catch (error) {
+          console.error("Error getting marks:", error);
 
-    localStorage.setItem("marks", JSON.stringify(marks));
+          alert("Failed to get marks: " + error.message);
+        }
+      }
 
-    alert("Marks Deleted Successfully!");
+      document
+        .getElementById("deleteMarksForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
 
-    this.reset();
+          if (!currentMarkId) {
+            alert("Please get the marks first.");
+            return;
+          }
 
-});
+          if (!confirm("Are you sure you want to delete these marks?")) {
+            return;
+          }
 
-function logout(){
+          try {
+            const response = await fetch(
+              `http://localhost:5000/api/marks/${currentMarkId}`,
+              {
+                method: "DELETE",
+              },
+            );
 
-    if(confirm("Do you want to exit?")){
+            const data = await response.json();
 
-        sessionStorage.removeItem("isLoggedIn");
-        window.location.href = "index.html";
+            if (!response.ok) {
+              throw new Error(
+                data.error || data.message || "Failed to delete marks",
+              );
+            }
 
-    }
+            alert("Marks Deleted Successfully!");
 
-}
+            document.getElementById("deleteMarksForm").reset();
 
-</script>
+            currentMarkId = null;
+          } catch (error) {
+            console.error("Error deleting marks:", error);
 
-</body>
+            alert("Failed to delete marks: " + error.message);
+          }
+        });
+
+      function logout() {
+        if (confirm("Do you want to exit?")) {
+          sessionStorage.removeItem("isLoggedIn");
+
+          window.location.href = "index.html";
+        }
+      }
+    </script>
+  </body>
 </html>
