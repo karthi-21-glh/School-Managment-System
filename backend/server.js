@@ -9,6 +9,8 @@ const studentRoutes = require("./routes/students");
 
 const attendanceRoutes = require("./routes/attendance");
 
+const marksRoutes = require("./routes/marks");
+
 const app = express();
 
 const PORT = process.env.PORT || 5000;
@@ -16,6 +18,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use("/api/students", studentRoutes);
 app.use("/api/attendance", attendanceRoutes);
+app.use("/api/marks", marksRoutes);
 
 app.get("/", (req, res) => {
   res.json({
