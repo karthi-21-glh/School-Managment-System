@@ -1,200 +1,244 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Edit Student</title>
-    <link rel="stylesheet" href="dbms.css">
+    <link rel="stylesheet" href="dbms.css" />
     <script>
-        if (sessionStorage.getItem("isLoggedIn") !== "true") {
-            alert("Access Restricted! Please log in first.");
-            window.location.href = "index.html";
-        }
+      if (sessionStorage.getItem("isLoggedIn") !== "true") {
+        alert("Access Restricted! Please log in first.");
+        window.location.href = "index.html";
+      }
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
+    <header>
+      <div class="logo">
+        <img
+          src="https://i.pinimg.com/1200x/af/85/fd/af85fd005cb098111b85832faf17f00f.jpg"
+          alt="School Logo"
+        />
+      </div>
 
-<header>
+      <h1>School Management System</h1>
 
-    <div class="logo">
-        <img src="https://i.pinimg.com/1200x/af/85/fd/af85fd005cb098111b85832faf17f00f.jpg" alt="School Logo">
-    </div>
-
-    <h1>School Management System</h1>
-
-    <nav>
+      <nav>
         <ul>
+          <li><a href="dbms_home.html">Home</a></li>
 
-            <li><a href="dbms_home.html">Home</a></li>
+          <li class="dropdown">
+            Student
+            <ul class="dropdown-content">
+              <li><a href="add_student.html">Add Student</a></li>
+              <li><a href="edit_student.html">Edit Student</a></li>
+              <li><a href="delete_student.html">Delete Student</a></li>
+            </ul>
+          </li>
 
-            <li class="dropdown">
-                Student
-                <ul class="dropdown-content">
-                    <li><a href="add_student.html">Add Student</a></li>
-                    <li><a href="edit_student.html">Edit Student</a></li>
-                    <li><a href="delete_student.html">Delete Student</a></li>
-                </ul>
-            </li>
+          <li class="dropdown">
+            Marks
+            <ul class="dropdown-content">
+              <li><a href="enter_marks.html">Enter Marks</a></li>
+              <li><a href="edit_marks.html">Edit Marks</a></li>
+              <li><a href="delete_marks.html">Delete Marks</a></li>
+            </ul>
+          </li>
 
-            <li class="dropdown">
-                Marks
-                <ul class="dropdown-content">
-                    <li><a href="enter_marks.html">Enter Marks</a></li>
-                    <li><a href="edit_marks.html">Edit Marks</a></li>
-                    <li><a href="delete_marks.html">Delete Marks</a></li>
-                </ul>
-            </li>
+          <li class="dropdown">
+            Attendance
+            <ul class="dropdown-content">
+              <li><a href="add_attendance.html">Add Attendance</a></li>
+              <li><a href="edit_attendance.html">Edit Attendance</a></li>
+              <li><a href="delete_attendance.html">Delete Attendance</a></li>
+            </ul>
+          </li>
 
-            <li class="dropdown">
-                Attendance
-                <ul class="dropdown-content">
-                    <li><a href="add_attendance.html">Add Attendance</a></li>
-                    <li><a href="edit_attendance.html">Edit Attendance</a></li>
-                    <li><a href="delete_attendance.html">Delete Attendance</a></li>
-                </ul>
-            </li>
+          <li>
+            <a href="reports_html.html">Reports</a>
+          </li>
 
-            <li>
-                <a href="reports_html.html">Reports</a>
-            </li>
-
-            <li onclick="logout()">Exit</li>
-
+          <li onclick="logout()">Exit</li>
         </ul>
-    </nav>
+      </nav>
+    </header>
 
-</header>
+    <div class="container">
+      <h2>EDIT STUDENT</h2>
 
-<div class="container">
+      <label for="regno">Registration Number</label>
 
-    <h2>EDIT STUDENT</h2>
-
-    <label for="regno">Registration Number</label>
-
-    <div class="search-box">
-        <input type="text" id="regno">
+      <div class="search-box">
+        <input type="text" id="regno" />
         <button type="button" onclick="searchStudent()">Search</button>
-    </div>
+      </div>
 
-    <form id="editForm">
-
+      <form id="editForm">
         <label for="name">Full Name</label>
-        <input type="text" id="name">
+        <input type="text" id="name" />
 
         <label for="dob">Date of Birth</label>
-        <input type="date" id="dob">
-
-        <label for="age">Age</label>
-        <input type="number" id="age">
+        <input type="date" id="dob" />
 
         <label for="gender">Gender</label>
         <select id="gender">
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
         </select>
 
         <label for="className">Class</label>
-        <input type="text" id="className">
+        <input type="text" id="className" />
 
-        <label for="address">Address</label>
-        <textarea id="address" rows="3"></textarea>
+        <label for="houseNo">House No</label>
+        <input type="text" id="houseNo" />
+
+        <label for="city">City</label>
+        <input type="text" id="city" />
+
+        <label for="pin">PIN</label>
+        <input type="text" id="pin" />
 
         <label for="phone">Phone Number</label>
-        <input type="text" id="phone">
+        <input type="text" id="phone" />
 
         <label for="email">Email Address</label>
-        <input type="email" id="email">
+        <input type="email" id="email" />
 
         <button type="submit">Update Student</button>
+      </form>
+    </div>
 
-    </form>
+    <script>
+      let currentAdminId = "ADM001";
 
-</div>
+      async function searchStudent() {
+        const regno = document.getElementById("regno").value.trim();
 
-<script>
+        if (!regno) {
+          alert("Please enter a Registration Number.");
+          return;
+        }
 
-function searchStudent(){
+        try {
+          const response = await fetch(
+            `http://localhost:5000/api/students/${encodeURIComponent(regno)}`,
+          );
 
-    let regno = document.getElementById("regno").value;
+          const data = await response.json();
 
-    let students = JSON.parse(localStorage.getItem("students")) || [];
+          if (!response.ok) {
+            throw new Error(data.error || data.message || "Student not found");
+          }
 
-    let student = students.find(s => s.regno === regno);
+          // Store the student's admin ID
+          currentAdminId = data.admin_id || "ADM001";
 
-    if(!student){
+          // Fill the form
+          document.getElementById("name").value = data.full_name || "";
 
-        alert("Student not found!");
-        return;
+          // PostgreSQL date may be returned as an ISO date/time
+          document.getElementById("dob").value = data.date_of_birth
+            ? data.date_of_birth.split("T")[0]
+            : "";
 
-    }
+          document.getElementById("gender").value = data.gender || "";
 
-    document.getElementById("name").value = student.name;
-    document.getElementById("dob").value = student.dob;
-    document.getElementById("age").value = student.age;
-    document.getElementById("gender").value = student.gender;
-    document.getElementById("className").value = student.className;
-    document.getElementById("address").value = student.address;
-    document.getElementById("phone").value = student.phone;
-    document.getElementById("email").value = student.email;
+          document.getElementById("className").value = data.class || "";
 
-}
+          document.getElementById("houseNo").value = data.house_no || "";
 
-document.getElementById("editForm").addEventListener("submit", function(e){
+          document.getElementById("city").value = data.city || "";
 
-    e.preventDefault();
+          document.getElementById("pin").value = data.pin || "";
 
-    let regno = document.getElementById("regno").value;
+          document.getElementById("phone").value = data.phone || "";
 
-    let students = JSON.parse(localStorage.getItem("students")) || [];
+          document.getElementById("email").value = data.email || "";
 
-    let index = students.findIndex(s => s.regno === regno);
+          alert("Student details loaded successfully!");
+        } catch (error) {
+          console.error("Error searching student:", error);
 
-    if(index === -1){
+          alert("Failed to find student: " + error.message);
+        }
+      }
 
-        alert("Student not found!");
-        return;
+      document
+        .getElementById("editForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
 
-    }
+          const regno = document.getElementById("regno").value.trim();
 
-    students[index] = {
+          if (!regno) {
+            alert("Please search for a student first.");
+            return;
+          }
 
-        regno: regno,
-        name: document.getElementById("name").value,
-        dob: document.getElementById("dob").value,
-        age: document.getElementById("age").value,
-        gender: document.getElementById("gender").value,
-        className: document.getElementById("className").value,
-        address: document.getElementById("address").value,
-        phone: document.getElementById("phone").value,
-        email: document.getElementById("email").value
+          const student = {
+            full_name: document.getElementById("name").value.trim(),
 
-    };
+            class: document.getElementById("className").value.trim(),
 
-    localStorage.setItem("students", JSON.stringify(students));
+            date_of_birth: document.getElementById("dob").value,
 
-    alert("Student Updated Successfully!");
+            gender: document.getElementById("gender").value,
 
-    document.getElementById("editForm").reset();
-    document.getElementById("regno").value = "";
+            phone: document.getElementById("phone").value.trim(),
 
-});
+            email: document.getElementById("email").value.trim(),
 
-function logout(){
+            admin_id: currentAdminId,
 
-    if(confirm("Do you want to exit?")){
+            house_no: document.getElementById("houseNo").value.trim(),
 
-        sessionStorage.removeItem("isLoggedIn");
-        window.location.href = "index.html";
+            city: document.getElementById("city").value.trim(),
 
-    }
+            pin: document.getElementById("pin").value.trim(),
+          };
 
-}
+          try {
+            const response = await fetch(
+              `http://localhost:5000/api/students/${encodeURIComponent(regno)}`,
+              {
+                method: "PUT",
 
-</script>
+                headers: {
+                  "Content-Type": "application/json",
+                },
 
-</body>
+                body: JSON.stringify(student),
+              },
+            );
 
+            const data = await response.json();
+
+            if (!response.ok) {
+              throw new Error(
+                data.error || data.message || "Failed to update student",
+              );
+            }
+
+            alert("Student Updated Successfully!");
+
+            document.getElementById("editForm").reset();
+            document.getElementById("regno").value = "";
+          } catch (error) {
+            console.error("Error updating student:", error);
+
+            alert("Failed to update student: " + error.message);
+          }
+        });
+
+      function logout() {
+        if (confirm("Do you want to exit?")) {
+          sessionStorage.removeItem("isLoggedIn");
+
+          window.location.href = "index.html";
+        }
+      }
+    </script>
+  </body>
 </html>
