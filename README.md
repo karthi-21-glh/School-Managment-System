@@ -639,9 +639,9 @@ REPORT
 
 ### Team Members
 
-- Harshita Sanka
-- Ganga J
 - Karthikeya S Arun
+- Ganga J
+- Harshita Sanka
 
 ---
 
