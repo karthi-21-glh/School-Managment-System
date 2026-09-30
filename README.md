@@ -128,8 +128,9 @@ flowchart TD
     B -->|SQL Queries| C
     C -->|Query Results| B
     B -->|JSON Response| A
-The frontend uses JavaScript `fetch()` requests to communicate with the Express.js REST API, while the backend uses PostgreSQL queries to access and modify the database.
 ```
+
+The frontend uses JavaScript `fetch()` requests to communicate with the Express.js REST API. The backend processes these requests, executes SQL queries against PostgreSQL, and returns the results to the frontend.
 
 ### Request Flow
 
