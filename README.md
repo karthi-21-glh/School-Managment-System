@@ -336,11 +336,11 @@ Home | Student ▼ | Student Directory | Marks ▼ | Attendance ▼ | Reports | 
 
 ### Student Directory
 
-![Student Directory](docs/screenshots/student-directory.png)
+![Student Directory](docs/screenshots/student_search_.png)
 
 ### Student Management
 
-![Add Student](docs/screenshots/add-student.png)
+![Add Student](docs/screenshots/add_student.png)
 
 ### Marks Management
 
