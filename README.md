@@ -118,24 +118,16 @@ The School Management System provides a centralized platform for managing essent
 
 ## 4. Architecture
 
-```text
-┌─────────────────────────────┐
-│          Frontend           │
-│       HTML / CSS / JS       │
-└──────────────┬──────────────┘
-               │ HTTP Requests
-               ▼
-┌─────────────────────────────┐
-│          Backend            │
-│     Node.js + Express.js    │
-│          REST APIs          │
-└──────────────┬──────────────┘
-               │ SQL Queries
-               ▼
-┌─────────────────────────────┐
-│         PostgreSQL          │
-│      school_management      │
-└─────────────────────────────┘
+```mermaid
+flowchart TD
+    A[Frontend<br/>HTML • CSS • JavaScript]
+    B[Backend<br/>Node.js • Express.js<br/>REST API]
+    C[PostgreSQL<br/>school_management]
+
+    A -->|HTTP Requests| B
+    B -->|SQL Queries| C
+    C -->|Query Results| B
+    B -->|JSON Response| A
 The frontend uses JavaScript `fetch()` requests to communicate with the Express.js REST API, while the backend uses PostgreSQL queries to access and modify the database.
 ```
 
