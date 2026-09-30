@@ -336,7 +336,7 @@ Home | Student ▼ | Student Directory | Marks ▼ | Attendance ▼ | Reports | 
 
 ### Student Directory
 
-![Student Directory](docs/screenshots/student_search_.png)
+![Student Directory](docs/screenshots/student_search.png)
 
 ### Student Management
 
