@@ -34,6 +34,14 @@ The School Management System provides a centralized platform for managing essent
 - Student directory
 - Filter students by class
 
+### Dashboard
+
+- Display total number of students
+- Display total marks records
+- Display total attendance records
+- Display average marks
+- Display student distribution by class
+
 ### Marks Management
 
 - Enter marks
@@ -58,6 +66,12 @@ The School Management System provides a centralized platform for managing essent
 - Calculate total marks
 - Calculate average
 - Calculate grade
+
+### Dashboard
+
+| Method | Endpoint         | Description                                    |
+| ------ | ---------------- | ---------------------------------------------- |
+| GET    | `/api/dashboard` | Get dashboard statistics and students by class |
 
 ### Database Features
 
@@ -122,6 +136,7 @@ The School Management System provides a centralized platform for managing essent
 │         PostgreSQL          │
 │      school_management      │
 └─────────────────────────────┘
+The frontend uses JavaScript `fetch()` requests to communicate with the Express.js REST API, while the backend uses PostgreSQL queries to access and modify the database.
 ```
 
 ### Request Flow
@@ -163,7 +178,6 @@ school-managment-system/
 ├── dbms.css
 │
 ├── backend/
-│   ├── .env
 │   ├── .env.example
 │   ├── db.js
 │   ├── package.json
@@ -312,26 +326,29 @@ Home | Student ▼ | Student Directory | Marks ▼ | Attendance ▼ | Reports | 
 
 ## 8. Screenshots / Demo
 
-Add final screenshots to a `docs/screenshots/` folder.
+### Login
 
-Recommended screenshots:
+![Login](docs/screenshots/login.png)
 
-```text
-docs/screenshots/dashboard.png
-docs/screenshots/student-directory.png
-docs/screenshots/add-student.png
-docs/screenshots/marks.png
-docs/screenshots/attendance.png
-docs/screenshots/reports.png
-```
+### Dashboard
 
-Then reference them like:
-
-```markdown
 ![Dashboard](docs/screenshots/dashboard.png)
-```
 
----
+### Student Directory
+
+![Student Directory](docs/screenshots/student-directory.png)
+
+### Student Management
+
+![Add Student](docs/screenshots/add-student.png)
+
+### Marks Management
+
+![Marks Management](docs/screenshots/marks.png)
+
+### Academic Report
+
+![Academic Report](docs/screenshots/reports.png)
 
 ## 9. API Documentation
 
@@ -612,6 +629,11 @@ REPORT
 
 ---
 
+### Demo
+
+The frontend can be viewed through GitHub Pages.  
+The complete application requires the Node.js backend and PostgreSQL database to be running locally.
+
 ## Project Status
 
 - [x] PostgreSQL database
@@ -639,9 +661,9 @@ REPORT
 
 ### Team Members
 
-- Harshita Sanka
-- Ganga J
 - Karthikeya S Arun
+- Ganga J
+- Harshita Sanka
 
 ---
 
